@@ -35,4 +35,11 @@ public class UserController {
         User user = userRepository.findBySession(session);
         return user;
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/setUser", consumes = "application/json")
+    User setUser(@RequestHeader(value = "token") String token, @RequestBody User user) {
+        userRepository.save(user);
+        return user;
+    }
+
 }

@@ -13,6 +13,7 @@ public class User extends BaseEntity {
     private String lastName;
     private String email;
     private String password;
+    private String img;
     @OneToOne
     private Session session;
 
@@ -20,12 +21,13 @@ public class User extends BaseEntity {
         super();
     }
 
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String firstName, String lastName, String email, String password, String img) {
         this();
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.img = img;
     }
 
     public String getFirstName() {
@@ -54,6 +56,14 @@ public class User extends BaseEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public void setPassword(String password) {

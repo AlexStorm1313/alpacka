@@ -1,5 +1,6 @@
 package com.alexstorm13.entity;
 
+import com.alexstorm13.repository.AccessTokenRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.persistence.Entity;

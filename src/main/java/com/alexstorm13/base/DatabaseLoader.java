@@ -32,7 +32,7 @@ public class DatabaseLoader implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         Session session = new Session();
         sessionRepository.save(session);
-        User alex = new User("Alex", "Brasser", "alexbrasser@gmail.com", "Sterk123");
+        User alex = new User("Alex", "Brasser", "alexbrasser@gmail.com", "Sterk123", "https://secure.gravatar.com/avatar/57532f4eb66a51505f9817de8d1b0dc4");
         alex.setSession(session);
         userRepository.save(alex);
         System.out.println("Session");
