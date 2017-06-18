@@ -1,9 +1,12 @@
 package com.alexstorm13.controller;
 
+import com.alexstorm13.entity.Session;
 import com.alexstorm13.entity.Software;
-import com.alexstorm13.repository.SoftwareRepository;
-import javafx.application.Application;
+import com.alexstorm13.entity.User;
+import com.alexstorm13.repository.*;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 /**
  * Created by AlexStorm13 A.K.A. King of everything A.K.A. Alex Brasser on 12/05/2017.
@@ -13,9 +16,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/software")
 public class SoftwareController {
     private SoftwareRepository softwareRepository;
+    private final AccessTokenRepository accessTokenRepository;
+    private final NotificationRepository notificationRepository;
+    private final SessionRepository sessionRepository;
+    private final UserRepository userRepository;
 
-    public SoftwareController(SoftwareRepository softwareRepository) {
+    public SoftwareController(SoftwareRepository softwareRepository, AccessTokenRepository accessTokenRepository, NotificationRepository notificationRepository, SessionRepository sessionRepository, UserRepository userRepository) {
         this.softwareRepository = softwareRepository;
+        this.accessTokenRepository = accessTokenRepository;
+        this.notificationRepository = notificationRepository;
+        this.sessionRepository = sessionRepository;
+        this.userRepository = userRepository;
     }
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
@@ -25,25 +36,50 @@ public class SoftwareController {
     }
 
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    Software getSoftwareById(@PathVariable Long id) {
-        Software software = softwareRepository.findOne(id);
-        return software;
+    Object getSoftwareById(@PathVariable Long id, @RequestHeader String token) {
+        if (accessTokenRepository.findByToken(token) != null) {
+            Software software = softwareRepository.findOne(id);
+            return software;
+        } else {
+            return notificationRepository.findByName("token_mis_match");
+        }
     }
 
     @RequestMapping(value = "/put", method = RequestMethod.PUT, consumes = "application/json")
-    Software createSoftware(@RequestBody Software software) {
-        softwareRepository.save(software);
-        return software;
+    Object createSoftware(@RequestBody Software software, @RequestHeader String token, @RequestHeader String key) {
+        if (accessTokenRepository.findByToken(token) != null) {
+            Session session = sessionRepository.findByKey(key);
+            User user = userRepository.findBySession(session);
+            if (Objects.equals(user.getRole(), "admin")) {
+                softwareRepository.save(software);
+                return software;
+            } else {
+                return notificationRepository.findByName("no_admin");
+            }
+        } else {
+            return notificationRepository.findByName("token_mis_match");
+        }
     }
 
     @RequestMapping(value = "/patch", method = RequestMethod.PATCH, consumes = "application/json")
-    Software updateSoftware(@RequestBody Software software) {
-        softwareRepository.save(software);
-        return software;
+    Object updateSoftware(@RequestBody Software software, @RequestHeader String token, @RequestHeader String key) {
+        if (accessTokenRepository.findByToken(token) != null) {
+            Session session = sessionRepository.findByKey(key);
+            User user = userRepository.findBySession(session);
+            if (Objects.equals(user.getRole(), "admin")) {
+                softwareRepository.save(software);
+                return software;
+            } else {
+                return notificationRepository.findByName("no_admin");
+            }
+        } else {
+            return notificationRepository.findByName("token_mis_match");
+        }
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    Boolean deleteSoftware(@PathVariable Long id) {
+    Boolean deleteSoftware(@PathVariable Long id, @RequestHeader String token) {
+        Software software = softwareRepository.findOne(id);
         softwareRepository.delete(id);
         return softwareRepository.findOne(id) == null;
     }

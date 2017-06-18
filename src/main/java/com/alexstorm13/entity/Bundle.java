@@ -15,13 +15,13 @@ public class Bundle extends BaseEntity {
     @ManyToMany(mappedBy = "bundles", cascade = CascadeType.PERSIST)
     private List<User> users;
 
-    @ManyToMany
+    @ManyToMany()
     private List<Software> software;
 
     @ElementCollection
     private List<Long> ownerIds;
 
-    private Bundle(){
+    private Bundle() {
         super();
         software = new ArrayList<>();
         ownerIds = new ArrayList<>();
@@ -67,7 +67,7 @@ public class Bundle extends BaseEntity {
         this.ownerIds.add(user.getId());
     }
 
-    public void removeOwner(User user){
+    public void removeOwner(User user) {
         this.ownerIds.remove(user.getId());
     }
 
