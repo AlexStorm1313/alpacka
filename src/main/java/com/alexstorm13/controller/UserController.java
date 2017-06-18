@@ -37,7 +37,7 @@ public class UserController {
         return user;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/setUser", consumes = "application/json")
+    @RequestMapping(method = RequestMethod.PATCH, value = "/patch", consumes = "application/json")
     User setUser(@RequestHeader(value = "token") String token, @RequestBody User user) {
         userRepository.save(user);
         return user;

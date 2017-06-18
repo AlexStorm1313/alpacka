@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Created by AlexStorm13 A.K.A. King of everything A.K.A. Alex Brasser A.K.A. King of everything A.K.A. Alex Brasser on 12/05/2017.
  */
-@RestController
 @CrossOrigin
+@RestController
 public class SessionController {
     private final UserRepository userRepository;
     private final AccessTokenRepository accessTokenRepository;
