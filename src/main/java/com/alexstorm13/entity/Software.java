@@ -4,6 +4,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,11 +17,12 @@ public class Software extends BaseEntity{
     private String description;
     private String url;
 
-    @ManyToMany(mappedBy = "softwareList", cascade = CascadeType.PERSIST)
-    private List<Bundle> bundleList;
+    @ManyToMany(mappedBy = "software", cascade = CascadeType.PERSIST)
+    private List<Bundle> bundles;
 
     private Software(){
         super();
+        bundles = new ArrayList<>();
     }
     public Software(String name, String imgUrl, String description, String url) {
         this();
@@ -62,7 +64,11 @@ public class Software extends BaseEntity{
         this.url = url;
     }
 
-    public void setBundleList(List<Bundle> bundleList) {
-        this.bundleList = bundleList;
+    public void addBundle(Bundle bundle) {
+        this.bundles.add(bundle);
+    }
+
+    public void removeBundle(Bundle bundle) {
+        this.bundles.remove(bundle);
     }
 }
