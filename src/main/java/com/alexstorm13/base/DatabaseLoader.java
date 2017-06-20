@@ -46,10 +46,6 @@ public class DatabaseLoader implements ApplicationRunner {
         System.out.println("Session");
         System.out.println(alex.getSession().getKey());
 
-
-
-
-
         Software sublime = new Software("Sublime", "https://upload.wikimedia.org/wikipedia/en/4/4c/Sublime_Text_Logo.png", "Kanker verse text verwerker", "https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg");
         Software atom = new Software("Atom", "https://upload.wikimedia.org/wikipedia/en/4/4c/Sublime_Text_Logo.png", "Atom is nog verser", "https://download.sublimetext.com/Sublime%20Text%20Build%203126.dmg");
         softwareRepository.save(atom);
@@ -64,6 +60,5 @@ public class DatabaseLoader implements ApplicationRunner {
         alex.addBundle(bundle);
         bundleRepository.save(bundle);
         userRepository.save(alex);
-
     }
 }

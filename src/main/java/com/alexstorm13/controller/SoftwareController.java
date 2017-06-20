@@ -1,11 +1,14 @@
 package com.alexstorm13.controller;
 
+import com.alexstorm13.entity.Bundle;
 import com.alexstorm13.entity.Session;
 import com.alexstorm13.entity.Software;
 import com.alexstorm13.entity.User;
 import com.alexstorm13.repository.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -20,13 +23,15 @@ public class SoftwareController {
     private final NotificationRepository notificationRepository;
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
+    private final BundleRepository bundleRepository;
 
-    public SoftwareController(SoftwareRepository softwareRepository, AccessTokenRepository accessTokenRepository, NotificationRepository notificationRepository, SessionRepository sessionRepository, UserRepository userRepository) {
+    public SoftwareController(SoftwareRepository softwareRepository, AccessTokenRepository accessTokenRepository, NotificationRepository notificationRepository, SessionRepository sessionRepository, UserRepository userRepository, BundleRepository bundleRepository) {
         this.softwareRepository = softwareRepository;
         this.accessTokenRepository = accessTokenRepository;
         this.notificationRepository = notificationRepository;
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
+        this.bundleRepository = bundleRepository;
     }
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
@@ -78,9 +83,25 @@ public class SoftwareController {
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    Boolean deleteSoftware(@PathVariable Long id, @RequestHeader String token) {
-        Software software = softwareRepository.findOne(id);
-        softwareRepository.delete(id);
-        return softwareRepository.findOne(id) == null;
+    Boolean deleteSoftware(@PathVariable Long id, @RequestHeader String token, @RequestHeader String key) {
+        if (accessTokenRepository.findByToken(token) != null) {
+            Session session = sessionRepository.findByKey(key);
+            User user = userRepository.findBySession(session);
+            if (Objects.equals(user.getRole(), "admin")) {
+                Software software = softwareRepository.findOne(id);
+                Iterable<Bundle> bundles = bundleRepository.findAll();
+                for (Bundle bundle : bundles) {
+                    if (bundle.getSoftware().contains(software)) {
+                        bundle.removeSoftware(software);
+                    }
+                }
+                softwareRepository.delete(id);
+                return softwareRepository.findOne(id) == null;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

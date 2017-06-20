@@ -84,6 +84,10 @@ public class Bundle extends BaseEntity {
         return software;
     }
 
+    public void setSoftware(List<Software> software) {
+        this.software = software;
+    }
+
     public void addSoftware(Software software) {
         this.software.add(software);
         software.addBundle(this);

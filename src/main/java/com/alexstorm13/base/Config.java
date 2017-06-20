@@ -23,6 +23,6 @@ public class Config implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         accessTokenRepository.save(accessToken);
         System.out.println("Token");
-        System.out.println(accessToken.getToken());
+        System.out.println(accessTokenRepository.findOne(accessToken.getId()).getToken());
     }
 }
