@@ -12,10 +12,11 @@ public class Bundle extends BaseEntity {
     private String name;
     private String imgUrl;
     private String description;
+
     @ManyToMany(mappedBy = "bundles", cascade = CascadeType.PERSIST)
     private List<User> users;
 
-    @ManyToMany()
+    @ManyToMany
     private List<Software> software;
 
     @ElementCollection

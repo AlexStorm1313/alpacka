@@ -68,6 +68,11 @@ public class BundleController {
             Session session = sessionRepository.findByKey(key);
             User user = userRepository.findBySession(session);
             if (bundle.getOwners().contains(user.getId())) {
+                Bundle refBundle = bundleRepository.findOne(bundle.getId());
+                List<Software> lijst = refBundle.getSoftware();
+                for (Software s: lijst) {
+                    bundle.removeSoftware(s);
+                }
                 bundleRepository.save(bundle);
                 return bundle;
             } else {

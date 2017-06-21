@@ -1,9 +1,6 @@
 package com.alexstorm13.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +14,7 @@ public class Software extends BaseEntity{
     private String description;
     private String url;
 
-    @ManyToMany(mappedBy = "software", cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "software")
     private List<Bundle> bundles;
 
     private Software(){
